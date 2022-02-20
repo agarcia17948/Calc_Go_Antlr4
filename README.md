@@ -1,10 +1,8 @@
 
-# USO DE ANTLR CON GO
+# Uso de Antlr4 Con GO  ( Metodo LISTENER )
 
 -------------
 ## Instalacion de go en linux
-
-
 
 ### descargar el paquete de go para linux
  * https://go.dev/dl/
@@ -31,8 +29,6 @@
 * export GOPATH=$HOME/go
 * export   PATH=$PATH:$GOPATH/bin:$GOROOT/bin
 
-
-
 ### guardar con  ctrl-x
 
 ### actualizar el shell ( actualizar el archivo bashrc )
@@ -45,7 +41,7 @@
 
 ### output
 
-* $ go version go1.12.1 linux/amd64
+* $ go version go1.12.1 linux/amd64 . . . 
 
 ### crear la carpeta GO con subcarpetas BIN, SRC
 
@@ -55,8 +51,6 @@
 -------------
 ## instalacion de antlr 
 
-
-
 ### abrir una terminal y entrar a la carpeta:
 
 * $ cd /usr/local/lib
@@ -65,14 +59,11 @@
 
 * $ sudo curl -O https://www.antlr.org/download/antlr-4.9.2-complete.jar
 
-### modificar el archibo bashrc y agregar las sig lines
+### modificar el archivo bashrc y agregar las sig lines
 
 * $ export CLASSPATH=".:/usr/local/lib/antlr-4.9.2-complete.jar:$CLASSPATH"
 * $ alias antlr4='java -jar /usr/local/lib/antlr-4.9.2-complete.jar'
 * $ alias grun='java org.antlr.v4.gui.TestRig'
-
-
-
 
 ### guardar con  ctrl-x
 
@@ -88,8 +79,6 @@
 
 * ANTLR Parser Generator  Version 4.9.2 . . .
 
-
-
 -------------
 ### instalar el runtime package en GOPATH ( home/go )
 
@@ -104,7 +93,6 @@
 
 ### crear un archivo Calc.g4 y main.go dentro de la carpeta Calc
 
-
 * $ cd Calc 
 * $ touch Calc.g4
 * $ touch main.go
@@ -113,23 +101,31 @@
 ## cargar el archivo de la gramatica Calc.g4
 
 ```Go
-// la gramatica
+// nombre de la gramatica  igual al nombre del archivo
 grammar Calc;
- 
-prog: expr;
-// nombre de los no terminales con minusculas
-// nombre de los terminales con mayusculas
-expr: expr op=('*'|'/') expr  # OpBin
-    | expr op=('+'|'-') expr  # OpBin
-    | '(' expr ')'            # par
-    | INT                     # num
-    ;
- 
-INT : ('0'..'9')+ ;
+//tokens
+MUL: '*';
+ADD: '+';
+LB: '(';
+RB: ')';
+DIGIT: [0-9]+;
+WS: [\r\n\t]+ -> skip;
+
+// los nombres de los no terminales en minusculas
+//rules
+
+l: e EOF;
+e: e '+' t   # Sum
+ | t         # PasaT
+;         
+t: t '*' f   # Mul
+ | f         # PasaF
+;
+f: '(' e ')' # PasaE
+ | DIGIT     # Digit
+;
 
 ```
-
-
 
 ### compilar el archivo gramatica ( generar la carpeta parser )
 
@@ -142,9 +138,6 @@ INT : ('0'..'9')+ ;
 ### copiar la carpeta generada(parser) a Goroot
 
 * $ sudo mv parser /usr/local/go/src
-
-
-
 
 ## cargar el archivo de la main.go
 
@@ -183,28 +176,20 @@ func main() {
 
 * $ go run main.go
 
+--------------------
+## arreglando problemas
 
+### solucion1: el problema de la carpeta "parser"
+* se puede arreglar copiando la carpeta parser a goroot
+* es una forma facil
 
+### solucion2: forma mas tecnica ( forma ordenada )
+* dentro de la carpeta parser en una terminal correr  
+* $ go mod init parser
+* en la carpeta principal 
+* $ go mod init main
+* $ go mod tidy
+* agregar al final de go.mod del main
+* agregar 'require parser v1.0.0'
+* agregar 'replace parser v1.0.0 => ./parser'
 
-
-
-
-//
-//
-//
-
-$ go env -w GO111MODULE=on
-
-//
-//
-//
-
-//https://github.com/go-graphics/go-gui-projects 
-
-//
-//
-//
-
-73 personas en la explicacion del proyecto
-PABLO ANDRÃ‰S ROCA DOMINGUEZ21:11
-3014066260101@ingenieria.usac.edu.gt
