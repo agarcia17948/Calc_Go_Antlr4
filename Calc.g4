@@ -26,23 +26,5 @@ f: '(' e ')' # PasaE
 ;
 
 
-
-/* 
-
-# Sum, PassT, etc   nombre para enter o exit de la interfaz
-se debe poner nombre a todas las producciones
-
-
-
-
-
-
-prog: expr;
-expr: expr op=('*'|'/') expr  # OpBin
-    | expr op=('+'|'-') expr  # OpBin
-    | '(' expr ')'            # par
-    | INT                     # num
-    ;
- 
-INT : ('0'..'9')+ ;
-*/
+// Sum, PassT, etc   nombre para enter o exit de la interfaz
+// se debe poner nombre a todas las producciones
